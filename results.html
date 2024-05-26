@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Results</title>
+    <link rel="stylesheet" href="styleRes.css">
+</head>
+<body>
+    <div class="navbar">
+        <a href="index.html">
+            <img src="logo.jpeg" alt="logo" height="80px" class="logo">
+        </a>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="breakfast.html">Breakfast</a></li>
+            <li><a href="lunch.html">Lunch</a></li>
+            <li><a href="dinner.html">Dinner</a></li>
+            <li><a href="vege.html">Vege</a></li>
+            <li><a href="login.html">Login</a></li>
+        </ul>
+    </div>
+
+    <div class="recipes-container" id="recipes-container">
+        <!-- Recipes will be dynamically added here -->
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const recipesContainer = document.getElementById('recipes-container');
+            const urlParams = new URLSearchParams(window.location.search);
+            const ingredients = urlParams.get('ingredients');
+            const APP_ID = 'd291a5a9';
+            const APP_KEY = '95f53e72b7fa1f23b9df23fe79b89610';
+
+            console.log('Ingredients:', ingredients);
+
+            function fetchRecipes(query) {
+                const url = `https://api.edamam.com/api/recipes/v2?type=public&app_id=${APP_ID}&app_key=${APP_KEY}&q=${query}&limit=50`;
+
+                console.log('Fetching recipes from URL:', url);
+
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('API Response:', data);
+                        filterAndDisplayRecipes(data.hits);
+                    })
+                    .catch(error => console.error('Error fetching recipes:', error));
+            }
+
+            function checkFridge(data, fridgeArr) {
+                let valid = false;
+                for (let i = 0; i < fridgeArr.length; i++) {
+                    const fridgeIngredient = fridgeArr[i].trim().toLowerCase();
+                    for (let j = 0; j < data.recipe.ingredientLines.length; j++) {
+                        const ingredientString = data.recipe.ingredientLines[j].toLowerCase();
+                        if (ingredientString.includes(fridgeIngredient)) {
+                            valid = true;
+                            break;
+                        }
+                    }
+                    if (valid) break;
+                }
+                return valid;
+            }
+
+            function filterAndDisplayRecipes(recipes) {
+                const fridgeArr = ingredients.split(',');
+
+                const filteredRecipes = recipes.filter(recipeData => checkFridge(recipeData, fridgeArr));
+
+                console.log('Filtered Recipes:', filteredRecipes);
+
+                if (filteredRecipes.length === 0) {
+                    recipesContainer.innerHTML = '<p>No matching recipes found.</p>';
+                } else {
+                    filteredRecipes.forEach(recipeData => {
+                        const recipe = recipeData.recipe;
+                        const recipeElement = document.createElement('div');
+                        recipeElement.className = 'recipe';
+
+                        const recipeName = document.createElement('h2');
+                        recipeName.textContent = recipe.label;
+                        recipeElement.appendChild(recipeName);
+
+                        const recipeImage = document.createElement('img');
+                        recipeImage.src = recipe.image;
+                        recipeElement.appendChild(recipeImage);
+
+                        const recipeLink = document.createElement('a');
+                        recipeLink.href = recipe.url;
+                        recipeLink.textContent = 'Go to Recipe';
+                        recipeLink.target = '_blank';
+                        recipeElement.appendChild(recipeLink);
+
+                        recipesContainer.appendChild(recipeElement);
+                    });
+                }
+            }
+
+            if (ingredients) {
+                fetchRecipes(ingredients);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Fridge - Home</title>
+    <link rel="stylesheet" href="style.css">
+    <link href='https://cdn.jsdelivr.net/npm/boxicons@2.1.0/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="banner">
+        <div class="navbar">
+            <a href="index.html">
+                <img src="logo.jpeg" alt="logo" height="80px" class="logo">
+            </a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="breakfast.html">Breakfast</a></li>
+                <li><a href="lunch.html">Lunch</a></li>
+                <li><a href="dinner.html">Dinner</a></li>
+                <li><a href="vege.html">Vege</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </div>
+        <div class="wrapper">
+            <form action="results.html" method="get" id="search-form">
+                <h1>Enter Products</h1>
+                <div class="input-box">
+                    <input type="text" placeholder="What's inside your fridge?" required id="ingredient-input" name="ingredients">
+                    <i class='bx bx-search-alt' style='color:#ffffff'></i>
+                </div>
+                <button type="submit" class="btn">Search</button>
+            </form>
+            <div class="ingredients-panel">
+                <h2>Frequently Used Ingredients</h2>
+                <div class="ingredient" onclick="addIngredient('Milk')">Milk</div>
+                <div class="ingredient" onclick="addIngredient('Eggs')">Eggs</div>
+                <div class="ingredient" onclick="addIngredient('Bread')">Bread</div>
+                <div class="ingredient" onclick="addIngredient('Tomatoes')">Tomatoes</div>
+                <div class="ingredient" onclick="addIngredient('Butter')">Butter</div>
+                <div class="ingredient" onclick="addIngredient('Cheese')">Cheese</div>
+                <div class="ingredient" onclick="addIngredient('Cucumber')">Cucumber</div>
+                <div class="ingredient" onclick="addIngredient('Mustard')">Mustard</div>
+                <div class="ingredient" onclick="addIngredient('Mushrooms')">Mushrooms</div>
+                <div class="ingredient" onclick="addIngredient('Flour')">Flour</div>
+                <div class="ingredient" onclick="addIngredient('Wine')">Wine</div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        function addIngredient(ingredient) {
+            const inputBox = document.getElementById('ingredient-input');
+            inputBox.value += (inputBox.value ? ', ' : '') + ingredient;
+        }
+    </script>
+</body>
+</html>
